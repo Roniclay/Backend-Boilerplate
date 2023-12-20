@@ -1,5 +1,5 @@
 import {
-  IsDate,
+  IsDateString,
   IsEmail,
   IsEnum,
   IsNotEmpty,
@@ -40,10 +40,10 @@ export class CreateUserDto extends User {
   telefone: string;
 
   @IsNotEmpty()
-  @IsDate()
+  @IsDateString()
   dataNasc: Date;
 
   @IsNotEmpty()
-  @IsDate()
+  @IsDateString()
   dataCadas: Date;
 }
