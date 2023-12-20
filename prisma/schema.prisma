@@ -1,0 +1,118 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Fornecedor {
+  idFornecedor Int @id @default(autoincrement())
+  nome String
+  telefone String
+  cnpj String
+  email String @unique
+  endereco Endereco[]
+  notasFiscais NotaFiscal[]
+
+}
+
+
+model Endereco {
+  idEndereco Int @id @default(autoincrement())
+  rua String
+  numero String
+  complemento String?
+  cidade String
+  estado String
+  cep String
+  fornecedorId Int?
+  userId Int?
+  fornecedor Fornecedor? @relation(fields: [fornecedorId], references: [idFornecedor])
+  user User? @relation(fields: [userId], references: [idUser])
+}
+
+
+model NotaFiscal{
+  idNotaFiscal Int @id @default(autoincrement())
+  dataEntrada DateTime
+  numeroNota String 
+  dataCadastroNota DateTime @default(now())
+  valor Decimal
+  notaProduto NotaProduto[]
+  fornecedorId Int
+  fornecedor Fornecedor @relation(fields: [fornecedorId], references: [idFornecedor])
+}
+
+model NotaProduto{
+  idProdutoNota Int @id @default(autoincrement())
+  lote String
+  quantidade Int
+  notaFiscalId Int
+  produtoId Int
+  notaFiscal NotaFiscal @relation(fields: [notaFiscalId], references: [idNotaFiscal])
+  produto Produto @relation(fields: [produtoId], references: [idProduto])
+}
+
+model Produto{
+  idProduto Int @id @default(autoincrement())
+  nome String
+  dataValidade DateTime
+  nomeTipo String
+  descricao String
+  fabricante String
+  quantidadeEstoque Int
+  notaProduto NotaProduto[]
+  solicitacaoId Int
+  solicitacao Solicitacao @relation(fields: [solicitacaoId], references: [idSolicitacao])
+
+}
+
+model Administrador{
+  idAdministrador Int @id @default(autoincrement())
+  solicitacao Solicitacao[]
+  userId Int @unique
+  user User @relation(fields: [userId], references: [idUser], onDelete: Cascade)
+}
+
+model User{
+  idUser Int @id @default(autoincrement())
+  nome String
+  sexo Sexo
+  email String @unique
+  password String
+  telefone String
+  dataNasc DateTime
+  dataCadas DateTime @default(now())
+  endereco Endereco[]
+  medico Medico?
+  adminsitrador Administrador?
+}
+
+model Medico{
+  idMedico Int @id @default(autoincrement())
+  crm String
+  estadoCrm String
+  userId Int @unique
+  user User @relation(fields: [userId], references: [idUser])
+
+}
+
+model Solicitacao{
+  idSolicitacao Int @id @default(autoincrement())
+  quantidade Int
+  itens String
+  produto Produto[]
+  administradorId Int
+  administrador Administrador @relation(fields: [administradorId], references: [idAdministrador])
+}
+
+enum Sexo {
+  M
+  F
+  O
+}
