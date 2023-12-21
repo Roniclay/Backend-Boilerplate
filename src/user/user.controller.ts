@@ -8,6 +8,7 @@ import {
   Delete,
   ParseIntPipe,
 } from '@nestjs/common';
+import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -17,6 +18,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @IsPublic()
   @Post('create')
   createUser(@Body() createUserDto: CreateUserDto) {
     return this.userService.createUser(createUserDto);

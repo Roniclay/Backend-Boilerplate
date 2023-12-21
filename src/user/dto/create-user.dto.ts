@@ -42,8 +42,4 @@ export class CreateUserDto extends User {
   @IsNotEmpty()
   @IsDateString()
   dataNasc: Date;
-
-  @IsNotEmpty()
-  @IsDateString()
-  dataCadas: Date;
 }
