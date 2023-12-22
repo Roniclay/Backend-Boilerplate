@@ -59,7 +59,7 @@ export class FornecedorService {
       throw new NotFoundException('Fornecedor not Found');
 
     if (updateFornecedorDto.cnpj) {
-      throw new BadRequestException('Cnpj cant be change');
+      throw new BadRequestException('This property cannot be chaged');
     }
 
     await this.prisma.fornecedor.update({
