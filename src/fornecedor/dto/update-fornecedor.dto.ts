@@ -14,9 +14,5 @@ export class UpdateFornecedorDto extends PartialType(CreateFornecedorDto) {
 
   @IsString()
   @IsOptional()
-  cnpj: string;
-
-  @IsString()
-  @IsOptional()
   email: string;
 }
