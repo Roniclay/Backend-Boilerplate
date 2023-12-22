@@ -58,17 +58,8 @@ export class FornecedorService {
     if (!fornecedorToUpdate)
       throw new NotFoundException('Fornecedor not Found');
 
-    if (
-      updateFornecedorDto.cnpj &&
-      fornecedorToUpdate.cnpj !== updateFornecedorDto.cnpj
-    ) {
-      const cnpjIsUnique = await this.prisma.fornecedor.findUnique({
-        where: { cnpj: updateFornecedorDto.cnpj },
-      });
-
-      if (cnpjIsUnique) {
-        throw new BadRequestException('Cnpj already in use');
-      }
+    if (updateFornecedorDto.cnpj) {
+      throw new BadRequestException('Cnpj cant be change');
     }
 
     await this.prisma.fornecedor.update({
