@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Put,
+} from '@nestjs/common';
+import { IsPublic } from 'src/auth/decorators/is-public.decorator';
+
 import { EnderecoService } from './endereco.service';
 import { CreateEnderecoDto } from './dto/create-endereco.dto';
 import { UpdateEnderecoDto } from './dto/update-endereco.dto';
@@ -7,28 +17,36 @@ import { UpdateEnderecoDto } from './dto/update-endereco.dto';
 export class EnderecoController {
   constructor(private readonly enderecoService: EnderecoService) {}
 
-  @Post()
-  create(@Body() createEnderecoDto: CreateEnderecoDto) {
-    return this.enderecoService.create(createEnderecoDto);
+  @IsPublic()
+  @Post('create')
+  createEndereco(@Body() createEnderecoDto: CreateEnderecoDto) {
+    return this.enderecoService.createEndereco(createEnderecoDto);
   }
 
-  @Get()
-  findAll() {
-    return this.enderecoService.findAll();
+  @IsPublic()
+  @Get('all')
+  findAllEnderecos() {
+    return this.enderecoService.findAllEnderecos();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.enderecoService.findOne(+id);
+  @IsPublic()
+  @Get('one/:idEndereco')
+  findOneEndereco(@Param('idEndereco') idEndereco: number) {
+    return this.enderecoService.findByIdEndereco(idEndereco);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEnderecoDto: UpdateEnderecoDto) {
-    return this.enderecoService.update(+id, updateEnderecoDto);
+  @IsPublic()
+  @Put('update/:idEndereco')
+  updateEndereco(
+    @Param('idEndereco') idEndereco: string,
+    @Body() updateEnderecoDto: UpdateEnderecoDto,
+  ) {
+    return this.enderecoService.updateEndereco(+idEndereco, updateEnderecoDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.enderecoService.remove(+id);
+  @IsPublic()
+  @Delete('delete/:idEndereco')
+  removeEndereco(@Param('idEndereco') idEndereco: number) {
+    return this.enderecoService.removeEndereco(idEndereco);
   }
 }
