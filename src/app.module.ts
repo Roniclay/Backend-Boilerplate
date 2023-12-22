@@ -9,9 +9,10 @@ import { AuthModule } from './auth/auth.module';
 import { AdminModule } from './admin/admin.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { FornecedorModule } from './fornecedor/fornecedor.module';
+import { EnderecoModule } from './endereco/endereco.module';
 
 @Module({
-  imports: [PrismaModule, UserModule, AuthModule, AdminModule, FornecedorModule],
+  imports: [PrismaModule, UserModule, AuthModule, AdminModule, FornecedorModule, EnderecoModule],
   controllers: [AppController],
   providers: [
     AppService,
