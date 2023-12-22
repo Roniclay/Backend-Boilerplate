@@ -7,12 +7,10 @@ import { CreateAdminDto } from './dto/create-admin.dto';
 export class AdminService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createAdminDto: CreateAdminDto) {
-    const { userId, ...adminData } = createAdminDto;
-
+  async createAdmin(createAdminDto: CreateAdminDto) {
     // Verificar se o usuário existe
     const existingUser = await this.prisma.user.findUnique({
-      where: { idUser: userId },
+      where: { idUser: createAdminDto.userId },
     });
 
     if (!existingUser) {
@@ -21,14 +19,7 @@ export class AdminService {
 
     // Criar o administrador
     return await this.prisma.administrador.create({
-      data: {
-        ...adminData,
-        user: {
-          connect: {
-            idUser: userId,
-          },
-        },
-      },
+      data: { ...createAdminDto },
     });
   }
 
@@ -40,7 +31,7 @@ export class AdminService {
     return `This action returns a #${id} admin`;
   }
 
-  async remove(idAdministrador: number) {
+  async removeAdmin(idAdministrador: number) {
     const admin = await this.prisma.administrador.findUnique({
       where: { idAdministrador: idAdministrador },
     });
