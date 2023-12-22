@@ -46,9 +46,7 @@ export class UserService {
       where: { idUser },
     });
 
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+    if (!user) throw new NotFoundException('User not found');
 
     return user;
   }
@@ -63,9 +61,7 @@ export class UserService {
     });
 
     // Verificando se usuário existe
-    if (!userToUpdate) {
-      throw new NotFoundException('User not found');
-    }
+    if (!userToUpdate) throw new NotFoundException('User not found');
 
     // Verificando se o campo email existe e o dado enviado é diferente do atual
     if (updateUserDto.email && userToUpdate.email !== updateUserDto.email) {

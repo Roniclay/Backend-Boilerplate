@@ -14,8 +14,8 @@ model Fornecedor {
   idFornecedor Int @id @default(autoincrement())
   nome String
   telefone String
-  cnpj String
-  email String @unique
+  cnpj String @unique
+  email String 
   endereco Endereco[]
   notasFiscais NotaFiscal[]
 

@@ -1,26 +1,94 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { Fornecedor } from '@prisma/client';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { Prisma } from '@prisma/client';
+
 import { CreateFornecedorDto } from './dto/create-fornecedor.dto';
 import { UpdateFornecedorDto } from './dto/update-fornecedor.dto';
 
 @Injectable()
 export class FornecedorService {
-  create(createFornecedorDto: CreateFornecedorDto) {
-    return 'This action adds a new fornecedor';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async createFornecedor(
+    createFornecedorDto: CreateFornecedorDto,
+  ): Promise<Fornecedor> {
+    const isCnpjUnique = await this.prisma.fornecedor.findUnique({
+      where: { cnpj: createFornecedorDto.cnpj },
+    });
+
+    if (isCnpjUnique) throw new BadRequestException('Cnpj is already in use');
+
+    const data: Prisma.FornecedorCreateInput = {
+      ...createFornecedorDto,
+    };
+
+    const createdFornecedor = await this.prisma.fornecedor.create({ data });
+
+    return {
+      ...createdFornecedor,
+    };
   }
 
-  findAll() {
-    return `This action returns all fornecedor`;
+  async findAllFornecedores() {
+    return await this.prisma.fornecedor.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} fornecedor`;
+  async findByIdFornecedor(idFornecedor: number) {
+    const fornecedor = await this.prisma.fornecedor.findUnique({
+      where: { idFornecedor },
+    });
+
+    if (!fornecedor) throw new NotFoundException('User not found');
+
+    return fornecedor;
   }
 
-  update(id: number, updateFornecedorDto: UpdateFornecedorDto) {
-    return `This action updates a #${id} fornecedor`;
+  async updateFornecedor(
+    idFornecedor: number,
+    updateFornecedorDto: UpdateFornecedorDto,
+  ) {
+    const fornecedorToUpdate = await this.prisma.fornecedor.findUnique({
+      where: { idFornecedor },
+    });
+
+    if (!fornecedorToUpdate)
+      throw new NotFoundException('Fornecedor not Found');
+
+    if (
+      updateFornecedorDto.cnpj &&
+      fornecedorToUpdate.cnpj !== updateFornecedorDto.cnpj
+    ) {
+      const cnpjIsUnique = await this.prisma.fornecedor.findUnique({
+        where: { cnpj: updateFornecedorDto.cnpj },
+      });
+
+      if (cnpjIsUnique) {
+        throw new BadRequestException('Cnpj already in use');
+      }
+    }
+
+    await this.prisma.fornecedor.update({
+      where: { idFornecedor },
+      data: { ...updateFornecedorDto },
+    });
+
+    return { ...fornecedorToUpdate, ...updateFornecedorDto };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} fornecedor`;
+  async removeFornecedor(idFornecedor: number) {
+    const fornecedor = await this.prisma.fornecedor.findUnique({
+      where: { idFornecedor },
+    });
+
+    if (!fornecedor) {
+      throw new NotFoundException('Fornecedor not found');
+    }
+
+    return await this.prisma.fornecedor.delete({ where: { idFornecedor } });
   }
 }

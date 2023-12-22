@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Put,
+} from '@nestjs/common';
+import { IsPublic } from 'src/auth/decorators/is-public.decorator';
+
 import { FornecedorService } from './fornecedor.service';
 import { CreateFornecedorDto } from './dto/create-fornecedor.dto';
 import { UpdateFornecedorDto } from './dto/update-fornecedor.dto';
@@ -7,28 +17,39 @@ import { UpdateFornecedorDto } from './dto/update-fornecedor.dto';
 export class FornecedorController {
   constructor(private readonly fornecedorService: FornecedorService) {}
 
-  @Post()
-  create(@Body() createFornecedorDto: CreateFornecedorDto) {
-    return this.fornecedorService.create(createFornecedorDto);
+  @IsPublic()
+  @Post('create')
+  createFornecedor(@Body() createFornecedorDto: CreateFornecedorDto) {
+    return this.fornecedorService.createFornecedor(createFornecedorDto);
   }
 
-  @Get()
+  @IsPublic()
+  @Get('all')
   findAll() {
-    return this.fornecedorService.findAll();
+    return this.fornecedorService.findAllFornecedores();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.fornecedorService.findOne(+id);
+  @IsPublic()
+  @Get(':idFornecedor')
+  findOne(@Param('idFornecedor') idFornecedor: number) {
+    return this.fornecedorService.findByIdFornecedor(idFornecedor);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFornecedorDto: UpdateFornecedorDto) {
-    return this.fornecedorService.update(+id, updateFornecedorDto);
+  @IsPublic()
+  @Put('update/:idFornecedor')
+  updateFornecedor(
+    @Param('idFornecedor') idFornecedor: number,
+    @Body() updateFornecedorDto: UpdateFornecedorDto,
+  ) {
+    return this.fornecedorService.updateFornecedor(
+      idFornecedor,
+      updateFornecedorDto,
+    );
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.fornecedorService.remove(+id);
+  @IsPublic()
+  @Delete('delete/:idFornecedor')
+  removeFornecedor(@Param('idFornecedor') idFornecedor: number) {
+    return this.fornecedorService.removeFornecedor(idFornecedor);
   }
 }
