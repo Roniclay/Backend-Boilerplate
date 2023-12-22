@@ -10,9 +10,10 @@ import { AdminModule } from './admin/admin.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { FornecedorModule } from './fornecedor/fornecedor.module';
 import { EnderecoModule } from './endereco/endereco.module';
+import { MedicoModule } from './medico/medico.module';
 
 @Module({
-  imports: [PrismaModule, UserModule, AuthModule, AdminModule, FornecedorModule, EnderecoModule],
+  imports: [PrismaModule, UserModule, AuthModule, AdminModule, FornecedorModule, EnderecoModule, MedicoModule],
   controllers: [AppController],
   providers: [
     AppService,

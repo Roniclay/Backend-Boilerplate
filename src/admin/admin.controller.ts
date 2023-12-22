@@ -23,8 +23,8 @@ export class AdminController {
   // Fazer endpoint findAll
   // Fazer endpoint findOne
 
-  @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.adminService.removeAdmin(id);
+  @Delete('delete/:idAdministrador')
+  remove(@Param('idAdministrador', ParseIntPipe) idAdministrador: number) {
+    return this.adminService.removeAdmin(idAdministrador);
   }
 }

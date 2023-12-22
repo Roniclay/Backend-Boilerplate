@@ -23,25 +23,17 @@ export class AdminService {
     });
   }
 
-  findAll() {
-    return `This action returns all admin`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} admin`;
-  }
-
   async removeAdmin(idAdministrador: number) {
     const admin = await this.prisma.administrador.findUnique({
-      where: { idAdministrador: idAdministrador },
+      where: { idAdministrador },
     });
 
     if (!admin) {
-      throw new NotFoundException('Admin not found');
+      throw new NotFoundException('Admin not found.');
     }
 
     return await this.prisma.administrador.delete({
-      where: { idAdministrador: idAdministrador },
+      where: { idAdministrador },
     });
   }
 }

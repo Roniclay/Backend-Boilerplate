@@ -98,7 +98,7 @@ model Medico{
   crm String
   estadoCrm String
   userId Int @unique
-  user User @relation(fields: [userId], references: [idUser])
+  user User @relation(fields: [userId], references: [idUser], onDelete: Cascade)
 
 }
 
