@@ -33,5 +33,6 @@ export class UpdateEnderecoDto extends PartialType(CreateEnderecoDto) {
   fornecedorId?: number;
 
   @IsNumber()
+  @IsOptional()
   userId?: number;
 }
