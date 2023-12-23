@@ -16,14 +16,12 @@ export class FornecedorService {
   async createFornecedor(
     createFornecedorDto: CreateFornecedorDto,
   ): Promise<Fornecedor> {
-    // Verifica se o cnpj já existe
     const isCnpjUnique = await this.prisma.fornecedor.findUnique({
       where: { cnpj: createFornecedorDto.cnpj },
     });
 
     if (isCnpjUnique) throw new BadRequestException('Cnpj is already in use');
 
-    // Cria Fornecedor
     const data: Prisma.FornecedorCreateInput = {
       ...createFornecedorDto,
     };
