@@ -40,7 +40,7 @@ model Endereco {
 model NotaFiscal{
   idNotaFiscal Int @id @default(autoincrement())
   dataEntrada DateTime
-  numeroNota String 
+  numeroNota String @unique
   dataCadastroNota DateTime @default(now())
   valor Decimal
   notaProduto NotaProduto[]
@@ -49,7 +49,7 @@ model NotaFiscal{
 }
 
 model NotaProduto{
-  idProdutoNota Int @id @default(autoincrement())
+  idNotaProduto Int @id @default(autoincrement())
   lote String
   quantidade Int
   notaFiscalId Int
@@ -60,7 +60,7 @@ model NotaProduto{
 
 model Produto{
   idProduto Int @id @default(autoincrement())
-  nome String
+  nome String @unique
   dataValidade DateTime
   nomeTipo String
   descricao String

@@ -13,9 +13,11 @@ import { EnderecoModule } from './endereco/endereco.module';
 import { MedicoModule } from './medico/medico.module';
 import { SolicitacaoModule } from './solicitacao/solicitacao.module';
 import { ProdutoModule } from './produto/produto.module';
+import { NotaProdutoModule } from './nota-produto/nota-produto.module';
+import { NotaFiscalModule } from './nota-fiscal/nota-fiscal.module';
 
 @Module({
-  imports: [PrismaModule, UserModule, AuthModule, AdminModule, FornecedorModule, EnderecoModule, MedicoModule, SolicitacaoModule, ProdutoModule],
+  imports: [PrismaModule, UserModule, AuthModule, AdminModule, FornecedorModule, EnderecoModule, MedicoModule, SolicitacaoModule, ProdutoModule, NotaProdutoModule, NotaFiscalModule],
   controllers: [AppController],
   providers: [
     AppService,

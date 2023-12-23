@@ -1,26 +1,82 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { Prisma } from '@prisma/client';
+
 import { CreateProdutoDto } from './dto/create-produto.dto';
 import { UpdateProdutoDto } from './dto/update-produto.dto';
 
 @Injectable()
 export class ProdutoService {
-  create(createProdutoDto: CreateProdutoDto) {
-    return 'This action adds a new produto';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async createProduto(createProdutoDto: CreateProdutoDto) {
+    //Verifica se o produto já existe
+    const isProdutoUnique = await this.prisma.produto.findUnique({
+      where: { nome: createProdutoDto.nome },
+    });
+
+    if (isProdutoUnique)
+      throw new BadRequestException('Produto already exist.');
+
+    // Cria Produto
+
+    const { solicitacaoId, ...rest } = createProdutoDto;
+
+    const data: Prisma.ProdutoCreateInput = {
+      ...rest,
+      solicitacao: { connect: { idSolicitacao: solicitacaoId } },
+    };
+
+    const createdProduto = await this.prisma.produto.create({ data });
+
+    return {
+      ...createdProduto,
+    };
   }
 
-  findAll() {
-    return `This action returns all produto`;
+  async findAllProduto() {
+    return await this.prisma.produto.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} produto`;
+  async findOneProduto(idProduto: number) {
+    return await this.prisma.produto.findUnique({
+      where: { idProduto },
+    });
   }
 
-  update(id: number, updateProdutoDto: UpdateProdutoDto) {
-    return `This action updates a #${id} produto`;
+  async updateProduto(idProduto: number, updateProdutoDto: UpdateProdutoDto) {
+    const enderecoToUpdate = await this.prisma.produto.findUnique({
+      where: { idProduto },
+    });
+    // Verifica se está sendo alterado o nome
+    const nomeIsUnique = await this.prisma.produto.findUnique({
+      where: { nome: updateProdutoDto.nome },
+    });
+
+    if (nomeIsUnique) {
+      throw new BadRequestException('Nome already in use.');
+    }
+
+    // Atualizando produto
+    await this.prisma.produto.update({
+      where: { idProduto },
+      data: { ...updateProdutoDto },
+    });
+
+    return { ...enderecoToUpdate, ...updateProdutoDto };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} produto`;
+  async removeProduto(idProduto: number) {
+    const produto = await this.prisma.produto.findUnique({
+      where: { idProduto },
+    });
+
+    if (!produto) throw new NotFoundException('Produto not found.');
+
+    return await this.prisma.produto.delete({ where: { idProduto } });
   }
 }
