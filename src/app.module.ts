@@ -11,9 +11,11 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { FornecedorModule } from './fornecedor/fornecedor.module';
 import { EnderecoModule } from './endereco/endereco.module';
 import { MedicoModule } from './medico/medico.module';
+import { SolicitacaoModule } from './solicitacao/solicitacao.module';
+import { ProdutoModule } from './produto/produto.module';
 
 @Module({
-  imports: [PrismaModule, UserModule, AuthModule, AdminModule, FornecedorModule, EnderecoModule, MedicoModule],
+  imports: [PrismaModule, UserModule, AuthModule, AdminModule, FornecedorModule, EnderecoModule, MedicoModule, SolicitacaoModule, ProdutoModule],
   controllers: [AppController],
   providers: [
     AppService,

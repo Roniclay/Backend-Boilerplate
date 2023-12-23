@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Param, Delete, Get } from '@nestjs/common';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 
 import { MedicoService } from './medico.service';
@@ -12,6 +12,18 @@ export class MedicoController {
   @Post('create')
   create(@Body() createMedicoDto: CreateMedicoDto) {
     return this.medicoService.createMedico(createMedicoDto);
+  }
+
+  @IsPublic()
+  @Get('all')
+  findAllAdministrador() {
+    return this.medicoService.findAllMedico();
+  }
+  // Fazer endpoint findOne
+  @IsPublic()
+  @Get('one/:idMedico')
+  findOneAdministrador(@Param('idMedico') idMedico: number) {
+    return this.medicoService.findByIdMedico(idMedico);
   }
 
   @Delete('delete/:idMedico')

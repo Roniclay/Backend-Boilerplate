@@ -1,5 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Prisma } from '@prisma/client';
 
 import { CreateAdminDto } from './dto/create-admin.dto';
 
@@ -8,7 +13,7 @@ export class AdminService {
   constructor(private readonly prisma: PrismaService) {}
 
   async createAdmin(createAdminDto: CreateAdminDto) {
-    // Verificar se o usuário existe
+    // Verifica se o usuário existe
     const existingUser = await this.prisma.user.findUnique({
       where: { idUser: createAdminDto.userId },
     });
@@ -17,9 +22,34 @@ export class AdminService {
       throw new NotFoundException('User not found');
     }
 
-    // Criar o administrador
-    return await this.prisma.administrador.create({
-      data: { ...createAdminDto },
+    // Verifica se o usuário já está cadastrado
+    const registeredUser = await this.prisma.administrador.findUnique({
+      where: { userId: createAdminDto.userId },
+    });
+
+    if (registeredUser) throw new BadRequestException('User já cadastrado');
+
+    // Cria o administrador
+    const { userId, ...rest } = createAdminDto;
+    const data: Prisma.AdministradorCreateInput = {
+      ...rest,
+      user: { connect: { idUser: userId } },
+    };
+
+    const createdAdmin = await this.prisma.administrador.create({ data });
+
+    return {
+      ...createdAdmin,
+    };
+  }
+
+  async findAllAdministrador() {
+    return await this.prisma.administrador.findMany();
+  }
+
+  async findByIdAdministrador(idAdministrador: number) {
+    return await this.prisma.administrador.findUnique({
+      where: { idAdministrador },
     });
   }
 

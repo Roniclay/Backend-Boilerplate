@@ -5,6 +5,7 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  Get,
 } from '@nestjs/common';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 
@@ -21,7 +22,17 @@ export class AdminController {
   }
 
   // Fazer endpoint findAll
+  @IsPublic()
+  @Get('all')
+  findAllAdministrador() {
+    return this.adminService.findAllAdministrador();
+  }
   // Fazer endpoint findOne
+  @IsPublic()
+  @Get('one/:idAdministrador')
+  findOneAdministrador(@Param('idAdministrador') idAdministrador: number) {
+    return this.adminService.findByIdAdministrador(idAdministrador);
+  }
 
   @Delete('delete/:idAdministrador')
   remove(@Param('idAdministrador', ParseIntPipe) idAdministrador: number) {
