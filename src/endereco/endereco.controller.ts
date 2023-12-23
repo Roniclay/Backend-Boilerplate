@@ -38,10 +38,10 @@ export class EnderecoController {
   @IsPublic()
   @Put('update/:idEndereco')
   updateEndereco(
-    @Param('idEndereco') idEndereco: string,
+    @Param('idEndereco') idEndereco: number,
     @Body() updateEnderecoDto: UpdateEnderecoDto,
   ) {
-    return this.enderecoService.updateEndereco(+idEndereco, updateEnderecoDto);
+    return this.enderecoService.updateEndereco(idEndereco, updateEnderecoDto);
   }
 
   @IsPublic()
