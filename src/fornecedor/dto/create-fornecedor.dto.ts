@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateFornecedorDto {
   @IsNotEmpty()
@@ -16,8 +16,4 @@ export class CreateFornecedorDto {
   @IsString()
   @IsNotEmpty()
   email: string;
-
-  @IsNotEmpty()
-  @IsNumber()
-  userId: number;
 }
