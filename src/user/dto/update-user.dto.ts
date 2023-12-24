@@ -3,6 +3,7 @@ import {
   IsDate,
   IsEmail,
   IsEnum,
+  IsNumber,
   IsOptional,
   IsString,
   Matches,
@@ -43,4 +44,8 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsDate()
   @IsOptional()
   dataNasc?: Date;
+
+  @IsOptional()
+  @IsNumber()
+  enderecoId?: number;
 }

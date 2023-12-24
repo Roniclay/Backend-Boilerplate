@@ -16,7 +16,8 @@ model Fornecedor {
   telefone String
   cnpj String @unique
   email String 
-  endereco Endereco[]
+  enderecoId Int @unique
+  endereco Endereco? @relation(fields: [enderecoId], references: [idEndereco])
   notasFiscais NotaFiscal[]
 
 }
@@ -30,10 +31,8 @@ model Endereco {
   cidade String
   estado String
   cep String
-  fornecedorId Int?
-  userId Int?
-  fornecedor Fornecedor? @relation(fields: [fornecedorId], references: [idFornecedor])
-  user User? @relation(fields: [userId], references: [idUser])
+  fornecedor Fornecedor?
+  user User[]
 }
 
 
@@ -88,9 +87,10 @@ model User{
   telefone String
   dataNasc DateTime
   dataCadas DateTime @default(now())
-  endereco Endereco[]
   medico Medico?
   adminsitrador Administrador?
+  enderecoId Int
+  endereco Endereco? @relation(fields: [enderecoId], references: [idEndereco])
 }
 
 model Medico{

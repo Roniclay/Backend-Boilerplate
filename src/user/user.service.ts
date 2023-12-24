@@ -28,9 +28,11 @@ export class UserService {
     const hashPassword = await this.hashPassword(createUserDto.password);
 
     // Cria usuer
+    const { enderecoId, ...rest } = createUserDto;
     const data: Prisma.UserCreateInput = {
-      ...createUserDto,
+      ...rest,
       password: hashPassword,
+      endereco: { connect: { idEndereco: enderecoId } },
     };
 
     const createdUser = await this.prisma.user.create({ data });

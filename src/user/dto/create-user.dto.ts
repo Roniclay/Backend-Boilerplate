@@ -3,6 +3,7 @@ import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
+  IsNumber,
   IsString,
   Matches,
   MaxLength,
@@ -42,4 +43,8 @@ export class CreateUserDto extends User {
   @IsNotEmpty()
   @IsDateString()
   dataNasc: Date;
+
+  @IsNotEmpty()
+  @IsNumber()
+  enderecoId: number;
 }

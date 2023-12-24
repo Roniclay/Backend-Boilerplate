@@ -22,8 +22,10 @@ export class FornecedorService {
 
     if (isCnpjUnique) throw new BadRequestException('Cnpj is already in use.');
 
+    const { enderecoId, ...rest } = createFornecedorDto;
     const data: Prisma.FornecedorCreateInput = {
-      ...createFornecedorDto,
+      ...rest,
+      endereco: { connect: { idEndereco: enderecoId } },
     };
 
     return await this.prisma.fornecedor.create({ data });
@@ -57,6 +59,13 @@ export class FornecedorService {
     if (updateFornecedorDto.cnpj) {
       throw new BadRequestException('This property cannot be changed.');
     }
+
+    const enderecoExist = await this.prisma.fornecedor.findUnique({
+      where: { enderecoId: updateFornecedorDto.enderecoId },
+    });
+
+    if (enderecoExist)
+      throw new BadRequestException('This address is already registered.');
 
     return await this.prisma.fornecedor.update({
       where: { idFornecedor },
