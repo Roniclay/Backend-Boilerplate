@@ -16,11 +16,7 @@ export class EnderecoService {
       ...createEnderecoDto,
     };
 
-    const createdEndereco = await this.prisma.endereco.create({ data });
-
-    return {
-      ...createdEndereco,
-    };
+    return await this.prisma.endereco.create({ data });
   }
 
   async findAllEnderecos() {
@@ -41,12 +37,15 @@ export class EnderecoService {
       where: { idEndereco },
     });
 
+    if (!enderecoToUpdate) throw new NotFoundException('Endereco not found.');
+
     if (updateEnderecoDto.fornecedorId) {
       const fornecedorExist = await this.prisma.fornecedor.findUnique({
         where: { idFornecedor: updateEnderecoDto.fornecedorId },
       });
 
-      if (!fornecedorExist) throw new NotFoundException('Fornecedor not found');
+      if (!fornecedorExist)
+        throw new NotFoundException('Fornecedor not found.');
     }
 
     if (updateEnderecoDto.userId) {
@@ -54,17 +53,13 @@ export class EnderecoService {
         where: { idUser: updateEnderecoDto.userId },
       });
 
-      if (!userExist) throw new NotFoundException('Fornecedor not found');
+      if (!userExist) throw new NotFoundException('User not found.');
     }
 
-    if (!enderecoToUpdate) throw new NotFoundException('Endereço not found');
-
-    await this.prisma.endereco.update({
+    return await this.prisma.endereco.update({
       where: { idEndereco },
       data: { ...updateEnderecoDto },
     });
-
-    return { ...enderecoToUpdate, ...updateEnderecoDto };
   }
 
   async removeEndereco(idEndereco: number) {
@@ -72,7 +67,7 @@ export class EnderecoService {
       where: { idEndereco },
     });
 
-    if (!endereco) throw new NotFoundException('Endereço not found');
+    if (!endereco) throw new NotFoundException('Endereco not found.');
 
     return await this.prisma.endereco.delete({ where: { idEndereco } });
   }

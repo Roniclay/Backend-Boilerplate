@@ -12,7 +12,7 @@ export class UpdateFornecedorDto extends PartialType(CreateFornecedorDto) {
   @IsString()
   telefone: string;
 
-  @IsString()
   @IsOptional()
+  @IsString()
   email: string;
 }

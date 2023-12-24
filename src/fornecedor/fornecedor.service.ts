@@ -16,23 +16,17 @@ export class FornecedorService {
   async createFornecedor(
     createFornecedorDto: CreateFornecedorDto,
   ): Promise<Fornecedor> {
-    // Verifica se o cnpj já existe
     const isCnpjUnique = await this.prisma.fornecedor.findUnique({
       where: { cnpj: createFornecedorDto.cnpj },
     });
 
-    if (isCnpjUnique) throw new BadRequestException('Cnpj is already in use');
+    if (isCnpjUnique) throw new BadRequestException('Cnpj is already in use.');
 
-    // Cria Fornecedor
     const data: Prisma.FornecedorCreateInput = {
       ...createFornecedorDto,
     };
 
-    const createdFornecedor = await this.prisma.fornecedor.create({ data });
-
-    return {
-      ...createdFornecedor,
-    };
+    return await this.prisma.fornecedor.create({ data });
   }
 
   async findAllFornecedores() {
@@ -44,7 +38,7 @@ export class FornecedorService {
       where: { idFornecedor },
     });
 
-    if (!fornecedor) throw new NotFoundException('User not found');
+    if (!fornecedor) throw new NotFoundException('User not found.');
 
     return fornecedor;
   }
@@ -58,18 +52,16 @@ export class FornecedorService {
     });
 
     if (!fornecedorToUpdate)
-      throw new NotFoundException('Fornecedor not Found');
+      throw new NotFoundException('Fornecedor not Found.');
 
     if (updateFornecedorDto.cnpj) {
-      throw new BadRequestException('This property cannot be chaged');
+      throw new BadRequestException('This property cannot be changed.');
     }
 
-    await this.prisma.fornecedor.update({
+    return await this.prisma.fornecedor.update({
       where: { idFornecedor },
       data: { ...updateFornecedorDto },
     });
-
-    return { ...fornecedorToUpdate, ...updateFornecedorDto };
   }
 
   async removeFornecedor(idFornecedor: number) {
@@ -78,7 +70,7 @@ export class FornecedorService {
     });
 
     if (!fornecedor) {
-      throw new NotFoundException('Fornecedor not found');
+      throw new NotFoundException('Fornecedor not found.');
     }
 
     return await this.prisma.fornecedor.delete({ where: { idFornecedor } });

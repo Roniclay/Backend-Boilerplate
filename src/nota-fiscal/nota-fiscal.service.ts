@@ -23,8 +23,6 @@ export class NotaFiscalService {
       throw new BadRequestException('Nota is already exist');
     }
 
-    // Cria Nota Fiscal
-
     const { fornecedorId, ...rest } = createNotaFiscalDto;
     const data: Prisma.NotaFiscalCreateInput = {
       ...rest,
